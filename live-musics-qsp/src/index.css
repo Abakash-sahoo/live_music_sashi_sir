@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-color: #021526;
+    color: white;
+    font-family: "Bree serif", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+._profileBlock ul {
+    display: flex;
+    flex-direction: column;
+    /* gap: 20px; */
+    font-size: 14px;
+    color: #999;
+}
+
+._profileBlock ul li a {
+    padding: 10px;
+}
+
+._profileBlock ul li a.active {
+    background: #393f61a6;
+    padding: 10px;
+    border-radius: 0;
+    margin: 1px 0 0 0;
+}
+
+.profile_photo svg{
+    position: absolute;
+    right: 29px;
+    top:30px;
+    background: #fff;
+    color: #E91E63;
+    font-size: 39px;
+    border-radius: 100%;
+}
