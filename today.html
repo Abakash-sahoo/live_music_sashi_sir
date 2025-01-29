@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <form id="form">
+        <input type="file" id="fileInput">
+        <button type="submit">submit</button>
+    </form>
+
+    <script>
+        let form=document.getElementById("form")
+        let fileInput=document.getElementById("fileInput")
+        let selectedFile;
+        fileInput.addEventListener("change",(e)=>{
+            selectedFile=e.target.files[0]
+                    console.log(selectedFile)
+
+        })
+    </script>
+</body>
+
+</html>

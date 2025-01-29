@@ -15,6 +15,7 @@ import AdminRoute from "./AdminRoute";
 import AdminDashboard from "../components/Admin/AdminDashboard";
 import AdminContainer from "../components/Admin/AdminContainer";
 import CreateAlbum from "../components/Admin/album/CreateAlbum";
+import LandingContainer from "../components/AlbumLandingpage/LandingContainer";
 // import PhoneAuth from "../components/auth/PhoneAuth";
 
 let router = createBrowserRouter([
@@ -24,7 +25,8 @@ let router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <h1>Home page</h1>
+                element: <LandingContainer />,
+               
             },
             {
                 path: "auth/login",
@@ -58,14 +60,14 @@ let router = createBrowserRouter([
                     </AdminRoute>
                 </ProtectedRoutes>
                 ),
-                children:[
+                children: [
                     {
-                        index:true,
-                        element:<AdminDashboard/>
+                        index: true,
+                        element: <AdminDashboard />
                     },
                     {
-                        path:"add-album",
-                        element:<CreateAlbum/>
+                        path: "add-album",
+                        element: <CreateAlbum />
                     }
                 ]
             },

@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import axios from "axios";
+import { __DB } from "../../../backend/firebase";
+import { addDoc, collection } from "firebase/firestore";
+import toast from "react-hot-toast";
 
 const CreateAlbum = () => {
-    let [poster, setPoster] = useState(null);
-    let [thumbnail, setThumbnail] = useState(null);
+    let [selectedFiles, setSelectedFiles] = useState([]);
+    let [songUrl, setSongUrl] = useState([]);
+    let [isLoading, setIsLoading] = useState(false);
+
+
     let [album, setAlbum] = useState({
         title: "",
         poster: "",
@@ -10,7 +17,6 @@ const CreateAlbum = () => {
         description: "",
         date: "",
         albumType: "",
-        src: "",
         thumbnail: "",
         singers: "",
         lyricists: "",
@@ -25,7 +31,6 @@ const CreateAlbum = () => {
         description,
         date,
         albumType,
-        src,
         singers,
         lyricists,
         musicDirector,
@@ -33,34 +38,81 @@ const CreateAlbum = () => {
         director,
     } = album;
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        let data = new FormData();
-        data.append("thumbnail", thumbnail);
-        data.append("poster", poster);
-        for (let ele in album) {
-            data.append(ele, album[ele]);
-        }
-        for (let [key, value] of data.entries()) {
-            console.log(`${ key }:, value`);
-        }
-    };
     const handleChange = e => {
         setAlbum({ ...album, [e.target.name]: e.target.value });
     };
-    const handlePosterFile = e => {
-        let file = e.target.files[0];
-        setPoster(file);
-    };
-    const handleThumbnailFile = e => {
-        let file = e.target.files[0];
-        console.log(file, "thumbnail");
-        setThumbnail(file);
-    };
+
+    const handleFileChange = e => {
+        setSelectedFiles([...selectedFiles, ...Array.from(e.target.files)])
+    }
+
+    const handleUpload = async e => {
+        e.preventDefault();
+        setIsLoading(true)
+        //~ Initialize an array to hold the uploaded song data
+        const uploadedSongs = [];
+
+        const uploaders = selectedFiles?.map(file => {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", "tyss_album");
+            formData.append("cloud_name", "dqapnmfci")
+
+            return axios
+                .post("https://api.cloudinary.com/v1_1/dqapnmfci/upload", formData)
+                .then(response => {
+                    const data = response.data;
+                    console.log(data);
+
+                    // setSongUrl(...songUrl, {id:data.asset_id, url: data.url});
+                    //~ Instead of using setSongUrl directly, push the data to the local array
+                    console.log(data,"================================================================")
+                    uploadedSongs.push({
+                        id: data.asset_id, url: data.url, name:file.name,type:file.type })
+                });
+        })
+        //~  Wait for all uploads to finish
+        await Promise.all(uploaders);
+
+        //~ Now that all songs are uploaded, update the state with the final list
+        setSongUrl(uploadedSongs); // Use the array of uploaded songs to update the state
+        // axios.all(uploaders).then(() => {
+        //   console.log("success"); 
+        // })
+
+        let payload = {
+            title,
+            language,
+            description,
+            date,
+            albumType,
+            singers,
+            lyricists,
+            musicDirector,
+            actors,
+            director,
+            song: uploadedSongs,
+        }
+        //~ create firestore collection
+        try {
+            setIsLoading(true); // Show loading state
+            let albumCollection = collection(__DB, "albumCollection");
+            let albumDoc = await addDoc(albumCollection, payload);
+            setIsLoading(false); // Hide loading state
+            toast.success("Album added successfully");
+            console.log(albumDoc);
+        } catch (error) {
+            console.error("Error adding album to Firestore:", error);
+            toast.error("Failed to add album.");
+        }
+        setIsLoading(false)
+    }
     return (
-        <div className="w-[70%] m-auto min-h-screen  text-white flex items-center justify-center ">
+  
+
+        <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center p-4">
             <form
-                onSubmit={handleSubmit}
+                onSubmit={handleUpload}
                 className="bg-gray-800 p-6 rounded-lg shadow-xl w-full space-y-4"
             >
                 <h1 className="text-2xl font-bold text-center">Add Album</h1>
@@ -92,17 +144,6 @@ const CreateAlbum = () => {
                             onChange={handleChange}
                             className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-slate-500"
                             required
-                        />
-                    </div>
-                    <div>
-                        <label htmlFor="title" className="block mb-2 font-medium">
-                            Poster
-                        </label>
-                        <input
-                            type="file"
-                            id="poster"
-                            className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-slate-500"
-                            onChange={handlePosterFile}
                         />
                     </div>
                 </section>
@@ -150,7 +191,7 @@ const CreateAlbum = () => {
                             required
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <label htmlFor="src" className="block mb-2 font-medium">
                             Source{" "}
                         </label>
@@ -163,7 +204,7 @@ const CreateAlbum = () => {
                             className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-slate-500"
                             required
                         />
-                    </div>
+                    </div> */}
                     <div>
                         <label htmlFor="thumbnail" className="block mb-2 font-medium">
                             Thumbnail
@@ -172,7 +213,7 @@ const CreateAlbum = () => {
                             type="file"
                             id="thumbnail"
                             className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-slate-500"
-                            onChange={handleThumbnailFile}
+                            onChange={handleFileChange}
                         />
                     </div>
                     <div>
@@ -245,13 +286,26 @@ const CreateAlbum = () => {
                             required
                         />
                     </div>
+                    <div>
+                        <label htmlFor="songs" className="block mb-2 font-medium">
+                            Songs
+                        </label>
+                        <input
+                            type="file"
+                            id="songs"
+                            onChange={handleFileChange}
+                            className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 focus:outline-none focus:ring-1 focus:ring-slate-500"
+                            required
+                            multiple
+                        />
+                    </div>
                 </section>
 
                 <button
                     type="submit"
-                    className=" py-2 px-4 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-500 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                    Submit
+                    {isLoading?"Loading....":"Submit"}
                 </button>
             </form>
         </div>
