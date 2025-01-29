@@ -40,3 +40,11 @@ body {
     font-size: 39px;
     border-radius: 100%;
 }
+
+.profile li{
+    padding-bottom: 22px;
+    font-size: 18px;
+}
+.profile span{
+    padding-right: 7px;
+}

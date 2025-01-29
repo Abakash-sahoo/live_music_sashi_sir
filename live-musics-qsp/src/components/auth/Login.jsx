@@ -4,8 +4,8 @@ import { BsFillEyeFill } from "react-icons/bs";
 
 import { BsEyeSlashFill } from "react-icons/bs";
 import { __AUTH } from "../../backend/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { NavLink, useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword, signInWithPhoneNumber } from "firebase/auth";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Login = () => {
     let navigate = useNavigate();
@@ -33,6 +33,42 @@ const Login = () => {
             //   let { username: u, email: e, password: p } = state;
             console.log(email, password);
             let { user } = await signInWithEmailAndPassword(__AUTH, email, password);
+            //!=======testting code =======================
+            // let obj = await signInWithPhoneNumber()
+            // async function signInWithPhoneNumber(phoneNumber, event) {
+            //     event.preventDefault();
+            //     try {
+            //         const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+
+            //         if (confirmation) {
+            //             setConfirm(confirmation);
+            //         }
+            //     } catch (err) {
+            //         console.log('Check Exist Error2 - ' + err.message);
+            //         console.log('error Code - ' + err.code);
+            //         setErrorOccured(true);
+            //         if (err.code === 'missing-phone-number') {
+            //             console.log('Missing Phone Number.');
+            //             setErrorMsg('Missing Phone Number.');
+            //         } else if (err.code === 'auth/invalid-phone-number') {
+            //             console.log('Invalid Phone Number.');
+            //             setErrorMsg('Invalid Phone Number.');
+            //         } else if (err.code === 'auth/quota-exceeded') {
+            //             console.log('SMS quota exceeded.');
+            //             setErrorMsg('SMS quota exceeded.Please try again later.');
+            //         } else if (err.code === 'auth/user-disabled') {
+            //             console.log('User disabled.');
+            //             setErrorMsg('Phone Number disabled. Please contact support.');
+            //         } else {
+            //             console.log('Unexpected Error.' + err.code);
+            //             axios.post(`https://myapi/error`, err);
+            //             setErrorMsg('Unexpected Error Occured. Please contact support.');
+            //         }
+            //     }
+            // }
+
+            //!==============end =========================
+
             console.log(user)
             console.log(user.emailVerified);
             if (user.emailVerified === true) {
@@ -48,6 +84,7 @@ const Login = () => {
                 isLoading: false,
             });
         } catch (err) {
+            toast.error("Wrong Credentials")
             console.log(err);
         }
     };
@@ -61,6 +98,9 @@ const Login = () => {
             <article className=" min-h-screen bg-gray-850 flex flex-col justify-center py-[12]">
                 <header className="mt-10 text-center text-3xl text-purple-600 max-w">
                     <h1>Login</h1>
+                    {/* <div className="">
+                        <Link to="">Login wiht otp</Link>
+                    </div> */}
                 </header>
                 <main className="mt-8 m-auto">
                     <form
@@ -122,7 +162,7 @@ const Login = () => {
                                 Forgetten Password</span>
                             <span className="tesxt-white text-sm bg-slate-500 p-2 rounded-sm hover:bg-pink-700 border-purple-700 hover:border-pink-500">
                                 <NavLink to={"/auth/resetpassword"}>Reset Password</NavLink>
-                            </span> 
+                            </span>
                         </div>
 
                         <div className="form-group p-2">

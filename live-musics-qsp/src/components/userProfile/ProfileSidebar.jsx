@@ -4,10 +4,11 @@ import { MdAccountCircle } from "react-icons/md";
 import { TbLockPassword } from "react-icons/tb";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { CiSettings } from "react-icons/ci";
+import { ImProfile } from "react-icons/im";
 
 const ProfileSidebar = () => {
     return (
-        <aside className='basis-[16%] bg-slate-800 h-[100vh] p-3'>
+        <aside className='basis-[16%] bg-slate-800 h-[100vh] p-3 flex flex-col justify-between'>
             <menu>
                 <ul className=''>
                     <li>
@@ -17,6 +18,16 @@ const ProfileSidebar = () => {
                             </span>
                             <span>
                                 My account
+                            </span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="add-profile" className='flex gap-1 items-center'>
+                            <span className='text-slate-400 2xl' >
+                                <ImProfile />
+                            </span>
+                            <span>
+                                Add Profie
                             </span>
                         </NavLink>
                     </li>
@@ -52,6 +63,12 @@ const ProfileSidebar = () => {
                     </li>
                 </ul>
             </menu>
+            <footer className='bg-red-600 p-2'>
+                <NavLink >
+                    Danger Zone
+                </NavLink>
+            </footer>
+
         </aside>
     )
 }

@@ -74,7 +74,7 @@ const UploadProfilePhoto = () => {
           <h1 className="mt-10 text-center text-3xl leading-5 text-purple-600 max-w flex flex-col gap-2 justify-center relative items-center">
 
             <span className="absolute top-[70px] left-0">
-              <Link to="/user/profile/myaccount">
+              <Link to="/user/profile/my-account">
                 <IoMdArrowRoundBack />
               </Link>
             </span>

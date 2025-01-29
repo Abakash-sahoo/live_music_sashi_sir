@@ -9,7 +9,7 @@ const Logo = () => {
                 </a> */}
 
                 <span>
-                    <a href="#" className='text-purple-700 font-bold text-2xl'>Qsp Music </a>
+                    <a href="#" className='text-slate-400 font-bold text-2xl'>Qsp Music </a>
                 </span>
             </figure>
         </aside>

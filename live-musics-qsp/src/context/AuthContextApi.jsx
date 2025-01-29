@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 export const AuthContext = createContext(null)
 
 const AuthProvider = ({ children }) => {
+    console.log("Auth Provider")
     let [authUser, setAuthUser] = useState(null);
     // let [isLoading,setIsLoading]=useState(null);
 
@@ -14,13 +15,15 @@ const AuthProvider = ({ children }) => {
         window.localStorage.removeItem('TOKEN')
         toast.success("logout successful")
         setAuthUser(null)
-        window.location.assign('/');//window api fro hard refresh
+        window.location.assign('/');//window api for hard refresh
     }
-
+    console.log("AuthProvider comp")
     useEffect(() => {
-        return onAuthStateChanged(__AUTH, userInfo => {
+        onAuthStateChanged(__AUTH, userInfo => {
+            console.log(userInfo)
             // console.log(userInfo.displayName)
             // console.log(userInfo.email)
+            // console.log(userInfo, "user info")
             if (userInfo?.emailVerified === true && userInfo.isAnonymous === false) {
                 // console.log(userInfo)
                 // setIsLoading(true)
@@ -33,7 +36,7 @@ const AuthProvider = ({ children }) => {
             }
             // setIsLoading(false)
         })
-    }, [])
+    }, [__AUTH])
     return (
         <AuthContext.Provider value={{ authUser, Logout }}>
             {children}
@@ -41,3 +44,5 @@ const AuthProvider = ({ children }) => {
     )
 }
 export default AuthProvider;
+
+

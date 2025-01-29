@@ -5,7 +5,7 @@ import { AuthContext } from '../../context/AuthContextApi'
 const Menu = () => {
     const { authUser, Logout } = useContext(AuthContext)
     // console.log(authUser);
-
+console.log("Menu comp")
     let AuthenticatedUser = () => {
         return <>
             <li>

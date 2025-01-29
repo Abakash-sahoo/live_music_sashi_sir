@@ -10,6 +10,12 @@ import MyAccount from "../components/userProfile/MyAccount";
 import ChangePassword from "../components/userProfile/ChangePassword";
 import UploadProfilePhoto from "../components/userProfile/UploadProfilePhoto";
 import Setting from "../components/userProfile/Setting";
+import AddProfile from "../components/userProfile/AddProfile";
+import AdminRoute from "./AdminRoute";
+import AdminDashboard from "../components/Admin/AdminDashboard";
+import AdminContainer from "../components/Admin/AdminContainer";
+import CreateAlbum from "../components/Admin/album/CreateAlbum";
+// import PhoneAuth from "../components/auth/PhoneAuth";
 
 let router = createBrowserRouter([
     {
@@ -26,6 +32,12 @@ let router = createBrowserRouter([
                     <Login />
                 </PublicRoutes>
             },
+            // {
+            //     path: "auth/phone-auth",
+            //     element: <PublicRoutes>
+            //         <PhoneAuth />
+            //     </PublicRoutes>
+            // },
             {
                 path: "auth/register",
                 element: <PublicRoutes>
@@ -39,6 +51,25 @@ let router = createBrowserRouter([
                 </PublicRoutes>
             },
             {
+                path: "/admin",
+                element: (<ProtectedRoutes>
+                    <AdminRoute>
+                        <AdminContainer />
+                    </AdminRoute>
+                </ProtectedRoutes>
+                ),
+                children:[
+                    {
+                        index:true,
+                        element:<AdminDashboard/>
+                    },
+                    {
+                        path:"add-album",
+                        element:<CreateAlbum/>
+                    }
+                ]
+            },
+            {
                 path: "user/profile",
                 element: (<ProtectedRoutes>
                     <ProfileContainer />
@@ -48,6 +79,18 @@ let router = createBrowserRouter([
                         index: true,
                         element: <ProtectedRoutes>
                             <MyAccount />
+                        </ProtectedRoutes>
+                    },
+                    {
+                        path: "change-passwornd",
+                        element: <ProtectedRoutes>
+                            <ChangePassword />
+                        </ProtectedRoutes>
+                    },
+                    {
+                        path: "add-profile",
+                        element: <ProtectedRoutes>
+                            <AddProfile />
                         </ProtectedRoutes>
                     },
                     {

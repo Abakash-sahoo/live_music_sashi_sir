@@ -71,6 +71,9 @@
 // let navigate = useNavigate();
 // navigate("/");
 
+//! false undefined null "empty sting"  0 NAN => falsy value
+//? truthy value all the values except
+
 
 //?============================>
 // [
