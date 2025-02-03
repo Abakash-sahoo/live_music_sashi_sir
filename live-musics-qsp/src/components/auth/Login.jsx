@@ -4,7 +4,7 @@ import { BsFillEyeFill } from "react-icons/bs";
 
 import { BsEyeSlashFill } from "react-icons/bs";
 import { __AUTH } from "../../backend/firebase";
-import { signInWithEmailAndPassword, signInWithPhoneNumber } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Login = () => {

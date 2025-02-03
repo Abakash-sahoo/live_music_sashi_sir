@@ -123,3 +123,5 @@
 // https://console.cloudinary.com/settings/c-8340bb15d4194cfceb456a22c59016/upload/presets
 
 //hello hello
+
+//stripe 

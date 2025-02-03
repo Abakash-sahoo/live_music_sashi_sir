@@ -1,16 +1,35 @@
-import React from 'react'
-import Logo from './Logo'
-import Menu from './Menu'
+import React, { useState, useEffect } from 'react';
+import Logo from './Logo';
+import Menu from './Menu';
 
-const NavbarContainer = () => {
+const Navbar = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 10) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
     return (
-        <section className='bg-[#dc9aff1c] h-[70px] sticky top-0'>
-            <article className='m-auto h-[70px] flex w-[90%] items-center justify-between' >
-                <Logo/>
-                <Menu/>
+        <section className={`h-[70px] z-40 sticky top-0 transition-all duration-300 
+            ${isScrolled ? " backdrop-blur-md shadow-md" : "bg-[#dc9aff1c]"}`}
+        >
+            <article className='m-auto h-[70px] flex w-[90%] items-center justify-between'>
+                <Logo />
+                <Menu />
             </article>
         </section>
-    )
-}
+    );
+};
 
-export default NavbarContainer
+export default Navbar;

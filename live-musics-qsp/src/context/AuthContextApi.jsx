@@ -1,14 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import { __AUTH } from "../backend/firebase";
+import { __AUTH, __DB } from "../backend/firebase";
 import toast from "react-hot-toast";
 
 export const AuthContext = createContext(null)
 
 const AuthProvider = ({ children }) => {
-    console.log("Auth Provider")
+    
+
     let [authUser, setAuthUser] = useState(null);
-    // let [isLoading,setIsLoading]=useState(null);
 
     const Logout = async () => {
         await signOut(__AUTH);
@@ -17,13 +17,8 @@ const AuthProvider = ({ children }) => {
         setAuthUser(null)
         window.location.assign('/');//window api for hard refresh
     }
-    console.log("AuthProvider comp")
     useEffect(() => {
         onAuthStateChanged(__AUTH, userInfo => {
-            console.log(userInfo)
-            // console.log(userInfo.displayName)
-            // console.log(userInfo.email)
-            // console.log(userInfo, "user info")
             if (userInfo?.emailVerified === true && userInfo.isAnonymous === false) {
                 // console.log(userInfo)
                 // setIsLoading(true)
@@ -38,7 +33,7 @@ const AuthProvider = ({ children }) => {
         })
     }, [__AUTH])
     return (
-        <AuthContext.Provider value={{ authUser, Logout }}>
+        <AuthContext.Provider value={{ authUser, Logout, setAuthUser }}>
             {children}
         </AuthContext.Provider>
     )
