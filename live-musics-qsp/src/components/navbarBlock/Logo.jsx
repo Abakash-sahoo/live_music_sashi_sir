@@ -1,19 +1,17 @@
-import React from 'react'
-import LOGO from './logo.png'
+import React from "react";
+import MusicLogo from "./img8.png";
+import { Link } from "react-router-dom";
+
 const Logo = () => {
-    return (
-        <aside className='logo'>
-            <figure>
-                {/* <a href="#">
-                    <img src={LOGO} alt="logo" width={100} />
-                </a> */}
+  return (
+    <aside className="logo">
+      <figure>
+        <Link to={"/"}>
+          <img src={MusicLogo} alt="" width={"80"} />
+        </Link>
+      </figure>
+    </aside>
+  );
+};
 
-                <span>
-                    <a href="#" className='text-slate-400 font-bold text-2xl'>Qsp Music </a>
-                </span>
-            </figure>
-        </aside>
-    )
-}
-
-export default Logo
+export default Logo;

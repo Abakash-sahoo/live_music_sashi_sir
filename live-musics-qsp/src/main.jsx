@@ -1,19 +1,20 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-// import App from './App'
-import "./index.css"
-import { RouterProvider } from 'react-router-dom'
-import router from './routes/routes'
-import AuthProvider from './context/AuthContextApi'
-import SongContextApi from './context/SongContextApi'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import "./index.css";
+import { RouterProvider } from "react-router-dom";
+import router from "./routes/Routes";
+import AuthProvider from "./components/context/AuthContextApi";
+import AudioContextProvider from "./components/context/AudioContextApi";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-    <SongContextApi>
-        <AuthProvider>
-            <RouterProvider router={router}>
+let root = ReactDOM.createRoot(document.getElementById("root"));
 
-            </RouterProvider>
-
-        </AuthProvider>
-    </SongContextApi>
-)
+root.render(
+  <AuthProvider>
+    <AudioContextProvider>
+      <RouterProvider router={router}>
+        <App />
+      </RouterProvider>
+    </AudioContextProvider>
+  </AuthProvider>
+);

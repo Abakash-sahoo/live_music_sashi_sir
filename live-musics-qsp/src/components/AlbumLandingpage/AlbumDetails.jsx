@@ -1,140 +1,206 @@
-import React, { useContext, useState, useRef } from 'react';
-import { FaPause, FaPlay } from 'react-icons/fa';
-import { Navigate, useLocation } from 'react-router-dom';
-import AudioPlayer from 'react-h5-audio-player';
-import 'react-h5-audio-player/lib/styles.css';
-import toast from 'react-hot-toast';
-import { AuthContext } from '../../context/AuthContextApi';
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { FaPlayCircle } from "react-icons/fa";
+import { FaPauseCircle } from "react-icons/fa";
+import Equalizer from "./equalizer-gif.gif";
+import toast from "react-hot-toast";
+import CustomAudioPlayer from "./CustomAudioPlayer";
 
 const AlbumDetails = () => {
-    const albumData = useLocation();
-    let { authUser } = useContext(AuthContext);
-    const { songs, album } = albumData?.state || {};
-    const numberOfTracks = album?.song?.filter((track) => track.type !== "image/jpeg") || [];
+  const albumData = useLocation();
+  const { album, songs } = albumData.state || {};
 
-    const [songUrl, setSongUrl] = useState(null);
-    const [playing, setPlaying] = useState(false);
-    const [currentSong, setCurrentSong] = useState(null);
+  console.log("Album:", album);
+  console.log("Songs:", songs);
 
-    // Audio Player Reference
-    const audioPlayerRef = useRef(null);
+  //! State for currently playing song
+  const [currentSongIndex, setCurrentSongIndex] = useState(null);
 
-    const handlePlayPause = (song, index) => {
-        if (authUser !== null || index < 1) {
-            if (currentSong === index && playing) {
-                setPlaying(false);
-                console.log(audioPlayerRef)
-                audioPlayerRef.current?.audio?.current.pause(); // Pause the audio
-            } else {
-                setCurrentSong(index);
-                setSongUrl(song?.url);
-                setPlaying(true);
-                setTimeout(() => {
-                    audioPlayerRef.current?.audio?.current.play(); // Play the audio
-                }, 100);
-            }
-        } else {
-            toast.error("Login and listen to the song");
-            Navigate("/auth/login");
-        }
-    };
+  //! State for play/pause music
+  const [isPlaying, setIsPlaying] = useState(false);
 
-    return (
-        <>
-            <section className='w-full album_landing'>
-                <article>
-                    <aside className='flex flex-col md:flex-row gap-5 w-full'>
-                        <div className='leftBlock md:basis-[30%]'>
-                            <figure className='py-3 relative'>
-                                <img src={songs?.url} alt="Album Cover" className='rounded-lg object-contain h-[500px] w-full' />
-                                <span className='absolute top-3 right-3 bg-purple-700 text-white px-4 py-1 rounded-md'>
-                                    {album?.language}
-                                </span>
-                            </figure>
-                        </div>
-                        <div className='rightBlock md:basis-[70%]'>
-                            <h1 className='text-3xl font-bold flex mt-2 items-center gap-2'>
-                                <span>{album?.title}</span>
-                                <span className='bg-purple-700 text-white mt-2 text-sm px-3 py-1 rounded-lg'>
-                                    Number of tracks: {numberOfTracks.length}
-                                </span>
-                            </h1>
-                            <ul className='flex flex-col gap-6 text-gray-400 mt-4 text-2xl'>
-                                <li><strong>Music Director:</strong> {album?.musicDirector}</li>
-                                <li><strong>Lyricists:</strong> {album?.lyricists}</li>
-                                <li><strong>Singers:</strong> {album?.singers}</li>
-                                <li><strong>Actors:</strong> {album?.actors}</li>
-                                <li><strong>Album Type:</strong> {album?.albumType}</li>
-                                <li><strong>Release Date:</strong> {album?.date}</li>
-                                <li><strong>Director:</strong> {album?.director}</li>
-                                <li><strong>Description:</strong> {album?.description}</li>
-                            </ul>
-                        </div>
-                    </aside>
+  //! State to track if GIF is visible
+  const [showGif, setShowGif] = useState(false);
 
-                    <main className='bg-slate-900 mt-6 rounded-lg overflow-auto p-5'>
-                        <table className='w-full text-left text-gray-400 mb-32'>
-                            <thead className='bg-slate-800 text-white text-sm uppercase'>
-                                <tr>
-                                    <th className='px-4 py-2'>#</th>
-                                    <th className='px-4 py-2'>Play</th>
-                                    <th className='px-4 py-2'>Track</th>
-                                    <th className='px-4 py-2'>Artists</th>
-                                    <th className='px-4 py-2'>Music Director</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {numberOfTracks.map((song, index) => (
-                                    <tr key={index} className='border-b border-slate-700 hover:bg-slate-800'>
-                                        <td className='px-4 py-2'>{index + 1}</td>
-                                        <td className='px-4 py-2 relative'>
-                                            <button
-                                                className='flex items-center justify-center w-10 h-10 bg-gray-800 rounded-full hover:bg-gray-700'
-                                                onClick={() => handlePlayPause(song, index)}
-                                            >
-                                                {currentSong === index && playing ? (
-                                                    <FaPause className='text-white' />
-                                                ) : (
-                                                    <FaPlay className='text-white' />
-                                                )}
-                                            </button>
-                                        </td>
-                                        <td className='px-4 py-2'>{song?.name?.replaceAll("-", " ")}</td>
-                                        <td className='px-4 py-2'>{album?.singers}, {album?.actors}</td>
-                                        <td className='px-4 py-2'>{album?.musicDirector}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </main>
-                </article>
-            </section>
+  //! State for audio change
+  const [audio, setAudio] = useState("");
 
-            {songUrl && (
-                <footer className="fixed bottom-0 left-0 w-full bg-gray-900 text-white shadow-lg">
-                    <button onClick={() => {
-                        setSongUrl(null);
-                        setCurrentSong(null);
-                        setPlaying(false);
-                        audioPlayerRef.current?.audio?.current.pause(); // Stop playback
-                    }}
-                        className='absolute right-[49%] top-[-15px] w-7 h-7 bg-slate-900 border bottom-1 rounded-full'>
-                        ❌
-                    </button>
-                    <div className="w-full">
-                        <AudioPlayer
-                            ref={audioPlayerRef}
-                            autoPlay
-                            src={songUrl}
-                            onPlay={() => setPlaying(true)}
-                            onPause={() => setPlaying(false)}
-                            className="w-full h-[120px]"
+  //! play/pause song handle
+  const handlePlayPause = (song, index) => {
+    const authUser = true;
+
+    if (authUser || index < 2) {
+      if (currentSongIndex === index) {
+        setIsPlaying(!isPlaying);
+        setShowGif(!showGif);
+      } else {
+        setCurrentSongIndex(index);
+        setIsPlaying(true);
+        setShowGif(true);
+      }
+    } else {
+      toast.error("Login to listen to other songs");
+    }
+  };
+
+  if (!album) {
+    return <p className="text-center text-white">Album not found</p>;
+  }
+
+  return (
+    <section className="w-full p-3 bg-slate-700">
+      <article className="flex gap-5 w-full drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-slate-800 hover:bg-slate-900 hover:ring-1 hover:ring-indigo-700 text-white rounded-lg transition duration-100 ease-in p-3">
+        <aside className="basis-[28%]">
+          <figure className="relative py-4">
+            <img
+              src={album.thumbnailAlbum}
+              alt={album.title}
+              className="w-full h-[400px] object-cover rounded-lg"
+            />
+            <span className="absolute top-1 right-[-20px] bg-rose-700 text-white px-2 py-1 rounded">
+              {album.albumType}
+            </span>
+          </figure>
+        </aside>
+
+        <aside className="basis-[70%] ml-2 p-3 ">
+          <h1 className="text-4xl font-bold py-2 tracking-wider">
+            {album.title}
+          </h1>
+          <p className="text-justify">
+            <span className="tracking-wider font-semibold">Description: </span>
+            <span className="text-gray-400">{album.description}</span>
+          </p>
+          <p className="mt-2">
+            <span className="tracking-wider font-semibold">Language: </span>
+            <span className="text-gray-400">{album.language}</span>
+          </p>
+          <p className="mt-2">
+            <span className="tracking-wider font-semibold mr-1">
+              Release Date of Movie:
+            </span>
+            <span className="text-gray-400">{album.dateCreated}</span>
+          </p>
+          <p className="mt-2">
+            <span className="tracking-wider font-semibold">Release Year: </span>
+            <span className="text-gray-400">{album.releaseYear}</span>
+          </p>
+          <p className="mt-2">
+            <span className="tracking-wider font-semibold">Album Type: </span>
+            <span className="text-gray-400">{album.albumType}</span>
+          </p>
+          <p className="mt-2">
+            <span className="tracking-wider font-semibold">Starcast: </span>
+            <span className="text-gray-400">{album.actors}</span>
+          </p>
+          <p className="mt-2">
+            <span className="tracking-wider font-semibold">Director: </span>
+            <span className="text-gray-400">{album.director}</span>
+          </p>
+          <p className="mt-2">
+            <span className="tracking-wider font-semibold mr-1">
+              Number of Tracks:
+            </span>
+            <span className="text-gray-400">{album.songCount}</span>
+          </p>
+        </aside>
+      </article>
+
+      <div className="mt-5 mb-40">
+        <h2 className="text-3xl font-bold mb-3 ml-1">Songs List</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-slate-900 text-white rounded-lg">
+            <thead>
+              <tr className="bg-gray-800">
+                <th className="p-2">Track No</th>
+                <th className="p-3">Thumbnail</th>
+                <th className="p-3 text-left">Track Name</th>
+                <th className="p-3 text-left">Singers</th>
+                <th className="p-3 text-left">Music Director</th>
+                <th className="p-3">Duration</th>
+                <th className="p-3">Size</th>
+              </tr>
+            </thead>
+            <tbody>
+              {songs && songs.length > 0 ? (
+                songs.map((song, index) => (
+                  <tr
+                    key={index}
+                    className={`group border-t border-gray-700 drop-shadow-[0_35px_35px_rgba(0,0,0,0.25)] bg-slate-900 cursor-pointer transition duration-100 ease-linear hover:ring-1 hover:ring-slate-600 ${
+                      index === currentSongIndex && isPlaying
+                        ? "bg-indigo-600"
+                        : "bg-slate-900"
+                    }`}
+                    onClick={() => handlePlayPause(song, index)}
+                  >
+                    <th>{index + 1}</th>
+                    <td className="p-3">
+                      <div className="relative w-12 h-12 m-auto">
+                        <img
+                          src={song.thumbnailSong}
+                          alt={song.name}
+                          className="w-full h-full rounded"
                         />
-                    </div>
-                </footer>
-            )}
-        </>
-    );
+
+                        {index === currentSongIndex && isPlaying && (
+                          <img
+                            src={Equalizer}
+                            alt="Playing GIF"
+                            className="absolute top-1 inset-0 w-full h-full object-cover rounded"
+                          />
+                        )}
+
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          {index === currentSongIndex && isPlaying ? (
+                            <FaPauseCircle className="text-white text-xl" />
+                          ) : (
+                            <FaPlayCircle className="text-white text-xl" />
+                          )}
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-2">{song.name}</td>
+                    <td className="p-2">{song.singers}</td>
+                    <td className="p-2">{song.musicDirector}</td>
+                    <td className="p-2 text-center">{song.duration}</td>
+                    <td className="p-2 text-center">{song.size}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="p-3 text-center text-gray-400">
+                    No songs available for this album.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <footer className="w-full">
+        {currentSongIndex !== null && (
+          <div
+            className="fixed bottom-0 left-0 w-full bg-indigo-800 text-white z-50"
+            style={{ boxShadow: "0px -10px 20px rgba(0, 0, 0, 0.5)" }}
+          >
+            <p className="text-center py-2">
+              Now Playing : {songs[currentSongIndex]?.name}
+            </p>
+            <CustomAudioPlayer
+              songs={songs}
+              audioSrc={songs[currentSongIndex]?.url}
+              isPlaying={isPlaying}
+              onPlayPause={() => setIsPlaying(!isPlaying)}
+              handlePlayPause={handlePlayPause}
+              length={songs.length}
+              index={currentSongIndex}
+            />
+          </div>
+        )}
+      </footer>
+    </section>
+  );
 };
 
 export default AlbumDetails;

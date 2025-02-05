@@ -1,144 +1,162 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "../components/Layout";
+import React from "react";
+import Layout from "../components/NavbarBlock/Layout";
 import Register from "../components/auth/Register";
 import Login from "../components/auth/Login";
+import ProfileContainer from "../components/UserProfiles/ProfileContainer";
 import ProtectedRoutes from "./ProtectedRoutes";
 import PublicRoutes from "./PublicRoutes";
 import ResetPassword from "../components/auth/ResetPassword";
-import ProfileContainer from "../components/userProfile/ProfileContainer";
-import MyAccount from "../components/userProfile/MyAccount";
-import ChangePassword from "../components/userProfile/ChangePassword";
-import UploadProfilePhoto from "../components/userProfile/UploadProfilePhoto";
-import Setting from "../components/userProfile/Setting";
-import AddProfile from "../components/userProfile/AddProfile";
+import MyAccount from "../components/UserProfiles/MyAccount";
+import ChangePassword from "../components/UserProfiles/ChangePassword";
+import AddProfile from "../components/UserProfiles/AddProfile";
+import Settings from "../components/UserProfiles/Settings";
+import UploadProfilePhoto from "../components/UserProfiles/UploadProfilePhoto";
+import PhoneAuth from "../components/auth/PhoneAuth";
 import AdminRoute from "./AdminRoute";
-import AdminDashboard from "../components/Admin/AdminDashboard";
-import AdminContainer from "../components/Admin/AdminContainer";
-import CreateAlbum from "../components/Admin/album/CreateAlbum";
-import LandingContainer from "../components/AlbumLandingpage/LandingContainer";
-import AlbumDetails from "../components/AlbumLandingpage/AlbumDetails";
-import LandingContent from "../components/AlbumLandingpage/LandingContent";
-// import PhoneAuth from "../components/auth/PhoneAuth";
+import AdminContainer from "../components/admin/AdminContainer";
+import AdminDashboard from "../components/admin/AdminDashboard";
+import CreateAlbum from "../components/admin/album/CreateAlbum";
+import AlbumLandingContainer from "../components/AlbumLandingPage/AlbumLandingContainer";
+import AlbumDashboard from "../components/AlbumLandingPage/AlbumDashboard";
+import AlbumLandingContent from "../components/AlbumLandingPage/AlbumLandingContent";
+import AlbumDetails from "../components/AlbumLandingPage/AlbumDetails";
 
-let router = createBrowserRouter([
-    {
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
         path: "/",
-        element: <Layout />,
+        element: <AlbumLandingContainer />, //Sidebar and Outlet
         children: [
-            {
-                path:"/",
-                element: <LandingContainer />,
-                children:[
-                    {
-                        index:true,
-                        element:<LandingContent/>
-                    },
-                    {
-                        path: "/album-details/:id",
-                        element: <AlbumDetails />,
-                    },
-                ]
-            },
-            
-            {
-                path: "auth/login",
-                element: <PublicRoutes>
-                    <Login />
-                </PublicRoutes>
-            },
-            // {
-            //     path: "auth/phone-auth",
-            //     element: <PublicRoutes>
-            //         <PhoneAuth />
-            //     </PublicRoutes>
-            // },
-            {
-                path: "auth/register",
-                element: <PublicRoutes>
-                    <Register />
-                </PublicRoutes>
-            },
-            {
-                path: "auth/resetpassword",
-                element: <PublicRoutes>
-                    <ResetPassword />
-                </PublicRoutes>
-            },
-            {
-                path: "/admin",
-                element: (<ProtectedRoutes>
-                    <AdminRoute>
-                        <AdminContainer />
-                    </AdminRoute>
-                </ProtectedRoutes>
-                ),
-                children: [
-                    {
-                        index: true,
-                        element: <AdminDashboard />
-                    },
-                    {
-                        path: "add-album",
-                        element: <CreateAlbum />
-                    }
-                ]
-            },
-            {
-                path: "user/profile",
-                element: (<ProtectedRoutes>
-                    <ProfileContainer />
-                </ProtectedRoutes>),
-                children: [
-                    {
-                        index: true,
-                        element: <ProtectedRoutes>
-                            <MyAccount />
-                        </ProtectedRoutes>
-                    },
-                    {
-                        path: "change-passwornd",
-                        element: <ProtectedRoutes>
-                            <ChangePassword />
-                        </ProtectedRoutes>
-                    },
-                    {
-                        path: "add-profile",
-                        element: <ProtectedRoutes>
-                            <AddProfile />
-                        </ProtectedRoutes>
-                    },
-                    {
-                        path: "my-account",
-                        element: <ProtectedRoutes>
-                            <MyAccount />
-                        </ProtectedRoutes>
-                    },
-                    {
-                        path: "change-password",
-                        element: <ProtectedRoutes>
-                            < ChangePassword />
-                        </ProtectedRoutes>
-                    },
-                    {
-                        path: "upload-profile-photo",
-                        element: <ProtectedRoutes>
-                            < UploadProfilePhoto />
-                        </ProtectedRoutes>
-                    },
-                    {
-                        path: "setting",
-                        element: <ProtectedRoutes>
-                            < Setting />
-                        </ProtectedRoutes>
-                    }
+          {
+            index: true,
+            element: <AlbumLandingContent />,
+          },
+          {
+            path: "album-details/:id/:title",
+            element: <AlbumDetails />,
+          },
+        ],
+      },
+      {
+        path: "/auth/login",
+        element: (
+          <PublicRoutes>
+            <Login />
+          </PublicRoutes>
+        ),
+      },
+      {
+        path: "/auth/register",
+        element: (
+          <PublicRoutes>
+            <Register />
+          </PublicRoutes>
+        ),
+      },
+      {
+        path: "/auth/resetpassword",
+        element: (
+          <PublicRoutes>
+            <ResetPassword />
+          </PublicRoutes>
+        ),
+      },
+      {
+        path: "/auth/phone-auth",
+        element: (
+          <PublicRoutes>
+            <PhoneAuth />
+          </PublicRoutes>
+        ),
+      },
+      {
+        path: "/admin",
+        element: (
+          <ProtectedRoutes>
+            <AdminRoute>
+              <AdminContainer />
+            </AdminRoute>
+          </ProtectedRoutes>
+        ),
+        children: [
+          {
+            index: true,
+            element: <AdminDashboard />,
+          },
+          {
+            path: "create-album",
+            element: <CreateAlbum />,
+          },
+        ],
+      },
+      {
+        path: "/user/profile",
+        element: (
+          <ProtectedRoutes>
+            <ProfileContainer />
+          </ProtectedRoutes>
+        ),
+        children: [
+          {
+            path: "my-account",
+            element: (
+              <ProtectedRoutes>
+                <MyAccount />
+              </ProtectedRoutes>
+            ),
+          },
+          {
+            path: "change-password",
+            element: (
+              <ProtectedRoutes>
+                <ChangePassword />
+              </ProtectedRoutes>
+            ),
+          },
+          {
+            path: "upload-photo",
+            element: (
+              <ProtectedRoutes>
+                <UploadProfilePhoto />
+              </ProtectedRoutes>
+            ),
+          },
+          {
+            path: "add-profile",
+            element: (
+              <ProtectedRoutes>
+                <AddProfile />
+              </ProtectedRoutes>
+            ),
+          },
+          {
+            path: "change-password",
+            element: (
+              <ProtectedRoutes>
+                <ChangePassword />
+              </ProtectedRoutes>
+            ),
+          },
+          {
+            path: "settings",
+            element: (
+              <ProtectedRoutes>
+                <Settings />
+              </ProtectedRoutes>
+            ),
+          },
+        ],
+      },
+      {
+        path: "*",
+        element: <h1>Page Not Found</h1>,
+      },
+    ],
+  },
+]);
 
-                ]
-
-            },
-
-
-        ]
-    },
-
-])
-export default router
+export default router;

@@ -1,17 +1,19 @@
-import React, { useContext } from 'react'
-import { Navigate } from 'react-router-dom'
-import { AuthContext } from '../context/AuthContextApi'
+import React from "react";
+import { AuthContext } from "../components/context/AuthContextApi";
+import { Navigate } from "react-router-dom";
+import { useContext } from "react";
 
-
-//this is for login and register
-const PublicRoutes = ({children}) => {
-    let { authUser } = useContext(AuthContext || {});
-  if(authUser && !authUser?.accessToken || window.localStorage.getItem('Token')){
-return <Navigate to={'/user/profile'}/>
-
+//! This is for Login and Register
+const PublicRoutes = ({ children }) => {
+  let { authUser } = useContext(AuthContext || {});
+  if (
+    (authUser && !authUser?.accessToken) ||
+    window.localStorage.getItem("TOKEN")
+  ) {
+    return <Navigate to="/" />;
   } else {
-      return <>{children}</>
+    return <>{children}</>;
   }
-}
+};
 
 export default PublicRoutes;

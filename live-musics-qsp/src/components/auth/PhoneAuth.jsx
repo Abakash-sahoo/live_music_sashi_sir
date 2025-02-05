@@ -1,104 +1,126 @@
-// import React, { useCallback, useState } from "react";
-// import toast from "react-hot-toast";
-// import { BsFillEyeFill } from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { IoEye } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import { __AUTH } from "../../backend/firebase";
+import { useNavigate } from "react-router-dom";
+import { FaArrowRightToBracket } from "react-icons/fa6";
+import toast from "react-hot-toast";
+import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-// import { BsEyeSlashFill } from "react-icons/bs";
-// import { __AUTH } from "../../backend/firebase";
-// import { signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
-// import { NavLink, useNavigate } from "react-router-dom";
+const PhoneAuth = () => {
+  const navigate = useNavigate();
+  const [phone, setPhone] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-// const PhoneAuth = () => {
-//     let navigate = useNavigate();
-//     const [isLoading, setIsLoading] = useState(false)
-//     const [phone, setPhone] = useState("")
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-//     const handleSubmit = async (e) => {
+    try {
+      setIsLoading(true);
+      let recaptchaVerifier = new RecaptchaVerifier(
+        __AUTH,
+        "captcha-container",
+        {
+          size: "invisible",
+          callback: (response) => {
+            // reCAPTCHA solved, allow signInWithPhoneNumber.
+            onSignInSubmit();
+          },
+        }
+      );
 
-//         e.preventDefault();
-//         try {
-//             setIsLoading(true);
-//             let recaptchaVerifier = new RecaptchaVerifier(
-//                 __AUTH,
-//                 "captch-container",
-//                 {
-//                     size: "invisible",
-//                     callback: response => {
-//                         console.log(response)
-//                     },
-//                 }
-//             );
-//             const confirmResult=await signInWithPhoneNumber(__AUTH, phone, recaptchaVerifier)
+      //! Sign in with phone number
+      const confirmResult = await signInWithPhoneNumber(
+        __AUTH,
+        phone,
+        recaptchaVerifier
+      );
+      toast.success(`OTP verification code sent to your registered ${phone}`);
+      let otp = window.prompt("Enter otp");
+      let user = await confirmResult.confirm(otp);
+      console.log(user);
+      toast.success("Successfully logged-in with otp");
+      navigate("/user/profile/my-account", { replace: true });
+    } catch (error) {
+      toast.error(error.code);
+      console.log(error)
+    } finally {
+      setIsLoading(false);
+    }
 
-//             let OTP=window.prompt("enter otp")
-//             let user=await confirmResult(confirmResult.confirm(OTP))
-//             console.log(user)
+    setPhone("");
+  };
 
-//         } catch {
-//             toast.error("error in phone auth")
-//             setIsLoading(false);
-//             setPhone("")
-//         }
-//     }
+  return (
+    <section>
+      <article className="container h-[100%-70px] bg-gray-850 flex flex-col justify-center py-12">
+        <header>
+          <h1 className="mt-10 text-center text-3xl leading-5 text-purple-600 max-w">
+            Login with OTP
+          </h1>
+        </header>
+        <main className="mt-8 m-auto">
+          <form
+            className="w-[400px] flex flex-col justify-center bg-gray-700 p-5 rounded-xl border-b-2"
+            onSubmit={handleSubmit}
+          >
+            <div className="py-2 relative">
+              <label
+                htmlFor="phoneNumber"
+                className="block text-sm font-medium leading-5 text-gray-100 py-1 tracking-wider"
+              >
+                Phone Number
+              </label>
+              <input
+                type="text"
+                name="phoneNumber"
+                id="phoneNumber"
+                placeholder="Enter your 10 digit phone number"
+                className="w-full p-2 rounded-sm border-gray-500 border bg-transparent focus:outline-none"
+                required
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+            {/* <div id="captcha-container"></div>
+            <div className="p-2 flex justify-between">
+              <span>
+                <Link className="text-white text-sm">
+                  Don't have an account?
+                </Link>
+              </span>
+              <span>
+                <Link
+                  to="/auth/register"
+                  className="text-white text-sm hover:border-b-2 hover:border-b-purple-500 hover:text-purple-400"
+                >
+                  Register
+                </Link>
+              </span>
+            </div> */}
+            <div className="p-2 flex justify-between mb-2">
+              <span>
+                <Link className="text-white text-sm">Forgotten Password?</Link>
+              </span>
+              <span>
+                <Link
+                  to="/auth/phone-auth"
+                  className="text-white text-sm hover:border-b-2 hover:border-b-purple-500 hover:text-purple-400"
+                >
+                  Reset Password
+                </Link>
+              </span>
+            </div>
+            <div className="py-2">
+              <button className="bg-purple-700 w-full flex justify-center py-2 px-4 border border-transparent text-sm font- my-1 rounded-md text-white hover:bg-purple-600 focus:outline-none">
+                {isLoading ? "Loading.." : "Send OTP"}
+              </button>
+            </div>
+          </form>
+        </main>
+      </article>
+    </section>
+  );
+};
 
-//     return (
-//         <section>
-//             <article className=" min-h-screen bg-gray-850 flex flex-col justify-center py-[12]">
-//                 <header className="mt-10 text-center text-3xl text-purple-600 max-w">
-//                     <h1 className="mt-10 text-center text-3xl leading-5 text-purple-600 max-w">Login with otp</h1>
-
-//                 </header>
-//                 <main className="mt-8 m-auto">
-//                     <form
-
-//                         action=""
-//                         className="w-[400px] flex flex-col justify-center bg-gray-700 p-4 rounded-[5px] border-b-2 border-purple-600"
-//                     >
-//                         <div className="form-group p-2">
-//                             <label
-//                                 htmlFor="phone"
-//                                 className="block font-[500] text-xl leading-5 text-gray-100 py-2"
-//                             >
-//                                 Phone Number{" "}
-//                             </label>
-//                             <input
-//                                 type="text"
-//                                 name="phone"
-
-//                                 id="phone"
-//                                 value={phone}
-//                                 onChange={(e) => setPhone(e.target.value)}
-//                                 placeholder="enter phone number"
-//                                 className="w-full p-2 rounded-sm border-gray-500 border bg-transparent"
-//                                 required
-//                             />
-//                         </div>
-
-//                         <div id="captcha_container"></div>
-
-//                         <div className="flex justify-between px-2">
-//                             <span>Don't have account ?</span>
-//                             <span className="">
-//                                 <NavLink to={"/auth/register"}>Register</NavLink>
-//                             </span>
-//                         </div>
-//                         <div className="flex justify-between px-2 items-center my-2">
-//                             <span className="text-sm font-thin text-gray-400">
-//                                 Forgetten Password</span>
-//                             <span className="tesxt-white text-sm bg-slate-500 p-2 rounded-sm hover:bg-pink-700 border-purple-700 hover:border-pink-500">
-//                                 <NavLink to={"/auth/resetpassword"}>Reset Password</NavLink>
-//                             </span>
-//                         </div>
-
-//                         <div className="form-group p-2">
-//                             <button className="bg-purple-800 w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium my-1 rounded-md text-white hover:bg-purple-600 focus:outline-none">
-//                                 Login{" "}
-//                             </button>
-//                         </div>
-//                     </form>
-//                 </main>
-//             </article>
-//         </section>
-//     );
-// };
-
-// export default PhoneAuth;
+export default PhoneAuth;

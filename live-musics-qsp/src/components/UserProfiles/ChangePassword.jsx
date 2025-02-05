@@ -2,34 +2,32 @@ import React, { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { __AUTH } from "../../backend/firebase";
 import { useNavigate } from "react-router-dom";
-import { sendPasswordResetEmail, updatePassword } from "firebase/auth";
-
-import { AuthContext } from "../../context/AuthContextApi";
+import { updatePassword } from "firebase/auth";
+import { AuthContext } from "../context/AuthContextApi";
 
 const ChangePassword = () => {
-
-  let {authUser}=useContext(AuthContext)
-
+  let { authUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [isLoading, setIsloading] = useState(false);
 
   let handleChange = (e) => {
     let { name, value } = e.target;
-    setPassword(value)
-  }
+    setPassword(value);
+  };
 
   let handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setIsloading(true);
+      //! Change or update Password
       await updatePassword(authUser, password);
-      toast.success(`New Password has been updated`);
+      toast.success("New password has been updated");
       navigate("/user/profile/my-account");
-
     } catch (error) {
-      toast.error(error.code.slice(5))
+      toast.error(error.code.slice(5));
     }
+    setPassword("");
     setIsloading(false);
   };
   return (
@@ -50,22 +48,21 @@ const ChangePassword = () => {
                 htmlFor="password"
                 className="block text-sm font-medium leading-5 text-gray-100 py-1 tracking-wider"
               >
-                password
+                New Password
               </label>
               <input
                 type="password"
                 name="password"
                 id="password"
-                placeholder="Enter your password"
+                placeholder="Enter your new password"
                 className="w-full p-2 rounded-sm border-gray-500 border bg-transparent focus:outline-none"
                 value={password}
                 onChange={handleChange}
                 required
               />
             </div>
-            
             <div className="py-2">
-              <button className="bg-purple-700 w-full flex justify-center py-2 px-4 border border-transparent text-sm font- my-1 rounded-md text-white hover:bg-purple-600 focus:outline-none">
+              <button className="bg-purple-700 w-full flex justify-center py-2 px-4 border border-transparent text-sm font- my-1 rounded-md text-white hover:bg-green-600 focus:outline-none">
                 {isLoading ? "loading.." : "Change Password"}
               </button>
             </div>

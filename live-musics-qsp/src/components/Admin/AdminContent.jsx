@@ -1,11 +1,9 @@
 import React from 'react'
-import CreateAlbum from './album/CreateAlbum'
+import { Outlet } from 'react-router-dom'
 
 const AdminContent = () => {
   return (
-    <div className='w-[100%]'>
-      <CreateAlbum/>
-    </div>
+    <div><Outlet/></div>
   )
 }
 

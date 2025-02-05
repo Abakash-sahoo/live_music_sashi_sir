@@ -4,12 +4,12 @@ import AdminContent from './AdminContent'
 
 const AdminContainer = () => {
   return (
-      <section className='bg-slate-700'>
-          <article className='flex '>
-              <AdminSidebar />
-              <AdminContent />
-          </article>
-      </section>
+    <section className='bg-slate-800'>
+        <article className='flex gap-2'>
+            <AdminSidebar/>
+            <AdminContent/>
+        </article>
+    </section>
   )
 }
 

@@ -1,40 +1,46 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom';
-import { BiSolidAlbum } from "react-icons/bi";
-import { RxDashboard } from "react-icons/rx";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { AiFillDashboard } from "react-icons/ai";
+import { BsFileEarmarkMusicFill } from "react-icons/bs";
 
 const AdminSidebar = () => {
-    return (
-        <aside className='basis-[16%] bg-slate-800 h-[100vh] p-3 flex flex-col justify-between'>
-            <menu>
-                <ul >
-                    <li>
-                        <NavLink to="/admin/dashboard" className='flex gap-1 items-center' >
-                            <span className='text-slate-400 2xl' >
-                                <RxDashboard />
-                            </span>
-                            <span>
-                                Dashboard
-                            </span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/admin/add-album" className='flex gap-1 items-center' >
-                            <span className='text-slate-400 2xl' >
-                                <BiSolidAlbum />
-                            </span>
-                            <span>
-                                Add Album
-                            </span>
-                        </NavLink>
-                    </li>
-                   
-                </ul>
-            </menu>
-            
+  return (
+    <aside className="basis-[16%] bg-slate-900 min-h-[90vh] flex flex-col justify-between">
+      <nav>
+        <ul className="flex flex-col p-1 bg-gray-900 cursor-pointer">
+          <li>
+            <NavLink
+              to={"/admin"}
+              end
+              className="flex items-center gap-2 p-3 hover:bg-slate-700 rounded-sm mb-2"
+              style={({ isActive }) => ({
+                background: isActive && "#38485f",
+              })}
+            >
+              <span className="text-slate-200 text-2xl">
+                <AiFillDashboard />
+              </span>
+              <span>Dashboard</span>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              to={"/admin/create-album"}
+              className="flex items-center gap-2 p-3 hover:bg-slate-700 rounded-sm mb-2"
+              style={({ isActive }) => ({
+                background: isActive && "#38485f",
+              })}
+            >
+              <span className="text-slate-200 text-2xl">
+                <BsFileEarmarkMusicFill />
+              </span>
+              <span>Create Album</span>
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  );
+};
 
-        </aside>
-    )
-}
-
-export default AdminSidebar
+export default AdminSidebar;

@@ -1,54 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 body {
-    background-color: #021526;
-    color: white;
-    font-family: "Bree serif", serif;
-    font-weight: 400;
-    font-style: normal;
+  background-color: #021526;
+  color: #fff;
+  font-family: "Bree Serif", serif;
+  font-weight: 400;
+  font-style: normal;
+  box-sizing: border-box;
 }
 
-._profileBlock ul {
-    display: flex;
-    flex-direction: column;
-    /* gap: 20px; */
-    font-size: 14px;
-    color: #999;
+/* Hide scrollbar for Webkit (Chrome, Safari) */
+#scroll_bar::-webkit-scrollbar {
+  display: none;
 }
 
-._profileBlock ul li a {
-    padding: 10px;
+/* Hide scrollbar for Firefox */
+#scroll_bar {
+  scrollbar-width: none;
 }
 
-._profileBlock ul li a.active {
-    background: #393f61a6;
-    padding: 10px;
-    border-radius: 0;
-    margin: 1px 0 0 0;
-}
+/* hover:blur-sm */
+.random_class:hover random_class_cards:not(:hover){
 
-.profile_photo svg{
-    position: absolute;
-    right: 29px;
-    top:30px;
-    background: #fff;
-    color: #E91E63;
-    font-size: 39px;
-    border-radius: 100%;
 }
-
-.profile li{
-    padding-bottom: 22px;
-    font-size: 18px;
-}
-.profile span{
-    padding-right: 7px;
-}
-.album_landing figure span{
-background:deeppink;
-
-}   
