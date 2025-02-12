@@ -7,14 +7,19 @@ import router from "./routes/Routes";
 import AuthProvider from "./components/context/AuthContextApi";
 import AudioContextProvider from "./components/context/AudioContextApi";
 
+
 let root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
   <AuthProvider>
     <AudioContextProvider>
       <RouterProvider router={router}>
-        <App />
+    
       </RouterProvider>
     </AudioContextProvider>
   </AuthProvider>
+
+
+
+
 );

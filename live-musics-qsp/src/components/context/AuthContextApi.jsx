@@ -6,6 +6,8 @@ import toast from "react-hot-toast";
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
+
+
   let [authUser, setAuthUser] = useState(null);
   let [isLoading, setIsloading] = useState(null);
 
@@ -36,7 +38,7 @@ const AuthProvider = ({ children }) => {
   }, [isLoading]);
 
   return (
-    <AuthContext.Provider value={{ authUser, logout }}>
+    <AuthContext.Provider value={{ authUser, logout, setAuthUser }}>
       {children}
     </AuthContext.Provider>
   );

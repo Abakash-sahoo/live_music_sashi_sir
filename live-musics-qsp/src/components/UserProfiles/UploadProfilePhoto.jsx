@@ -19,6 +19,7 @@ const UploadProfilePhoto = () => {
     setPhotoFile(file);
     if (file) {
       let reader = new FileReader();
+      
       reader.readAsDataURL(file); // This converts the file into a base64 string (Way to encode Binary Data)
       reader.onloadend = function (e) {
         setPhotoPreview(e.target.result); // e.target.result contains the base64 string
@@ -40,14 +41,14 @@ const UploadProfilePhoto = () => {
       }
 
       //! Convert File to Binary Data
-      const data = new FormData();
+      const data = new FormData(); 
       data.append("file", photoFile); // Add the file to the FormData object
       data.append("upload_preset", "live_music_app"); // Add the upload preset
-      data.append("cloud_name", "dcowd0rxv"); // Add the Cloudinary cloud name
+      data.append("cloud_name", "dqapnmfci"); // Add the Cloudinary cloud name
 
       //! Connect Cloudinary API and Send File => window.fetch();
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/dcowd0rxv/image/upload`,
+        `https://api.cloudinary.com/v1_1/dqapnmfci/image/upload`,
         {
           method: "POST",
           body: data,

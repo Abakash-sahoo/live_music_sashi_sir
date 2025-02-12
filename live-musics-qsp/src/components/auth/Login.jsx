@@ -4,7 +4,7 @@ import { IoEye } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { IoEyeOff } from "react-icons/io5";
 import { __AUTH } from "../../backend/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { FaArrowRightToBracket } from "react-icons/fa6";
 
@@ -50,6 +50,7 @@ const Login = () => {
       if (userData.user.emailVerified === true) {
         toast.success(`Successfully ${email} is logged in`);
       } else {
+        
         toast.error("Email not yet verified");
       }
     } catch (error) {
